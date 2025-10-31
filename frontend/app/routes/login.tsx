@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { useApp } from "../state/useApp";
+import { useNavigate } from "react-router";
 
 interface LoginProps {
 }
@@ -15,13 +15,18 @@ export default function LoginPage({ }: LoginProps) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
-  const { onLogin } = useApp()!;
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Validate and authenticate here
-    const mockUserData = { name: name || "Mei", email };
-    onLogin(mockUserData.name, mockUserData.email);
+    const mockLogin = new Promise((resolve) => {
+      document.cookie = `sid=111; path=/; max-age=86400;`; // temparily set a session cookie for 1 day
+      setTimeout(resolve, 1000)
+    });
+    mockLogin.then(() => {
+      // already update app state in root.tsx useEffect
+      navigate("/dashboard");
+    });
   };
 
   return (

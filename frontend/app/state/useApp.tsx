@@ -2,31 +2,36 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 
 type AppContextType = {
-  // isAuthenticated: boolean;
   userName: string;
   userEmail: string;
-  onLogin: (name: string, email: string) => void;
+  userAvatar: string;
+  onLogin: (name: string, email: string, avatar: string) => void;
+  onLogout: () => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
 export const useApp = () => useContext(AppContext);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
-  const navigate = useNavigate();
+  const [userAvatar, setUserAvatar] = useState("");
 
-  const onLogin = (name: string, email: string) => {
-    // setIsAuthenticated(true);
+  const onLogin = (name: string, email: string, avatar: string) => {
     setUserName(name);
     setUserEmail(email);
-    console.log("User logged in:", name, email);
-    navigate("/dashboard");
+    setUserAvatar(avatar);
+  }
+
+  const onLogout = () => {
+    setUserName("");
+    setUserEmail("");
+    setUserAvatar("");
+    console.log("User logged out");
   }
   
   return (
-    <AppContext.Provider value={{ userName, userEmail, onLogin }}>
+    <AppContext.Provider value={{ userName, userEmail, userAvatar, onLogin, onLogout }}>
       {children}
     </AppContext.Provider>
   );

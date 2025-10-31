@@ -5,11 +5,31 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
+  useNavigate,
 } from "react-router";
-
+import { useEffect, useState } from "react";
 import type { Route } from "./+types/root";
-import { AppProvider } from "./state/useApp";
+import { AppProvider, useApp } from "./state/useApp";
+import { Loader } from "lucide-react";
 import "./app.css";
+
+const mockGetSession = () => {
+  // Simulate an API call to check session
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const sessionCookie = document.cookie
+        .split("; ")
+        .find((c) => c.startsWith("sid="));
+      const valid = !!sessionCookie;
+      const mockUserData = { name: "Mei", email: "111@gmail.com", avatar: "" };
+      resolve({
+        valid,
+        ...(valid ? mockUserData : null),
+      });
+    }, 500);
+  });
+};
 
 // export const links: Route.LinksFunction = () => [
 //   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -45,9 +65,41 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <AppProvider>
-      <Outlet />
+      <AuthGate>
+        <Outlet />
+      </AuthGate>
     </AppProvider>
   );
+}
+
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [checking, setChecking] = useState(true);
+  const { onLogin } = useApp()!;
+
+  useEffect(() => {
+    mockGetSession().then((data: any) => {
+      if (data.valid) {
+        onLogin(data.name, data.email, data.avatar);
+        console.log("Valid session", data.name, data.email, data.avatar);
+      } else {
+        const isLoginPage = location.pathname === "/";
+        if (!isLoginPage) {
+          navigate("/", { replace: true });
+        }
+      }
+      setChecking(false);
+    });
+  }, [location.pathname]);
+
+  if (checking) {
+    return <div className="h-screen flex items-center justify-center">
+      <Loader></Loader>
+    </div>;
+  }
+
+  return <>{children}</>;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

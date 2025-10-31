@@ -1,8 +1,26 @@
+# OS files
 .DS_Store
-.env
-/node_modules/
+Thumbs.db
 
-# React Router
-/.react-router/
-/build/
+# IDE/editor
+.vscode/
+.idea/
 
+# Vite cache
+.vite/
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
