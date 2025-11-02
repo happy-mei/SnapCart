@@ -102,7 +102,7 @@ export default function LoginPage({ }: LoginProps) {
                 </div>
               )}
 
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full cursor-pointer">
                 {isLogin ? "Sign In" : "Create Account"}
               </Button>
             </form>

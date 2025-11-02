@@ -1,14 +1,48 @@
 import { Navigation } from "../components/Navigation";
-import { Upload } from "../components/Upload";
 import { useApp } from "~/state/useApp";
+import { useState } from "react";
+import { UploadCard } from "~/components/upload/UploadCard";
+import { ReceiptReview } from "~/components/upload/ReceiptReview";
+
+interface Item {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  category: string;
+}
 
 export default function UploadPage() {
+  const [uploading, setUploading] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+  const [items, setItems] = useState<Item[]>([]);
   const { userName } = useApp()!;
+
+  const resetUpload = () => {
+    setUploaded(false);
+    setItems([]);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation userName={userName} />
-      <Upload userName={userName} />
-      <div>11111</div>
+      <div className="min-h-screen bg-gray-50 pt-16 pb-20 md:pb-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-gray-900 mb-2">Upload your receipt</h1>
+          </div>
+          {!uploaded ? (
+            <UploadCard 
+              uploading={uploading} 
+              setUploading={setUploading} 
+              setUploaded={setUploaded} 
+              setItems={setItems} 
+            />
+          ) : (
+            <ReceiptReview items={items} onSave={resetUpload} onCancel={resetUpload} />
+          )}
+        </div>
+      </div>
     </div>
-  );
+  )
 }

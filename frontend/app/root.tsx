@@ -11,7 +11,8 @@ import {
 import { useEffect, useState } from "react";
 import type { Route } from "./+types/root";
 import { AppProvider, useApp } from "./state/useApp";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Toaster } from "./components/ui/sonner";
 import "./app.css";
 
 const mockGetSession = () => {
@@ -55,6 +56,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -95,7 +97,7 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (checking) {
     return <div className="h-screen flex items-center justify-center">
-      <Loader></Loader>
+      <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
     </div>;
   }
 

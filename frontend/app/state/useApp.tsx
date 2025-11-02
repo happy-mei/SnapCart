@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { useNavigate } from "react-router";
 
 type AppContextType = {
   userName: string;
@@ -7,6 +6,8 @@ type AppContextType = {
   userAvatar: string;
   onLogin: (name: string, email: string, avatar: string) => void;
   onLogout: () => void;
+  setUserName: (name: string) => void;
+  setUserAvatar: (avatar: string) => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -27,11 +28,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setUserName("");
     setUserEmail("");
     setUserAvatar("");
-    console.log("User logged out");
   }
   
   return (
-    <AppContext.Provider value={{ userName, userEmail, userAvatar, onLogin, onLogout }}>
+    <AppContext.Provider value={{ userName, userEmail, userAvatar, onLogin, onLogout, setUserName, setUserAvatar }}>
       {children}
     </AppContext.Provider>
   );

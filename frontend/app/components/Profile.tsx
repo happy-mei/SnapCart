@@ -6,24 +6,25 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { toast } from "sonner";
+import { useApp } from "~/state/useApp";
 
 interface ProfileProps {
-  userName: string;
-  userEmail: string;
-  onUpdateName: (name: string) => void;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function Profile({ userName, userEmail, onUpdateName, isOpen, onClose }: ProfileProps) {
+export function Profile({ isOpen, onClose }: ProfileProps) {
+  const { userName, userEmail, userAvatar, setUserName, setUserAvatar } = useApp()!;
+
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(userName);
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState(userAvatar);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveName = () => {
-    if (editedName.trim()) {
-      onUpdateName(editedName.trim());
+    const newName = editedName.trim();
+    if (newName) {
+      setUserName(newName);
       setIsEditingName(false);
       toast.success("Name updated successfully!");
     } else {
@@ -53,7 +54,9 @@ export function Profile({ userName, userEmail, onUpdateName, isOpen, onClose }: 
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatarUrl(reader.result as string);
+        const result = reader.result as string;
+        setAvatarUrl(result);
+        setUserAvatar(result);
         toast.success("Avatar updated successfully!");
       };
       reader.readAsDataURL(file);

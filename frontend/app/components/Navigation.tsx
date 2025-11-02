@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useApp } from "~/state/useApp";
-import { Profile } from "./profile";
+import { Profile } from "./Profile";
 import { useState } from "react";
 
 interface NavigationProps {
@@ -49,7 +49,7 @@ export function Navigation({ userName }: NavigationProps) {
           <div className="flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full cursor-pointer">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src="" alt={userName} />
                     <AvatarFallback className="bg-blue-600 text-white">
@@ -108,7 +108,15 @@ const UserMenuDropdownContent = () => {
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const onClickEditProfile = () => {
+    setShowProfile(true);
+  };
+
+  const onCloseProfile = () => {
+    setShowProfile(false);
+  };
+
+  const logout = () => {
     onLogout();
     document.cookie = "sid=; path=/; max-age=0";
     navigate("/");
@@ -124,21 +132,25 @@ const UserMenuDropdownContent = () => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => setShowProfile(true)}>
+        <DropdownMenuItem
+          onClick={onClickEditProfile}
+          className="cursor-pointer"
+        >
           <Edit className="w-4 h-4 mr-2" /> Edit Profile
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-          <LogOut className="w-4 h-4 mr-2" /> Log out
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={logout}
+          className="text-red-600 cursor-pointer"
+        >
+          <LogOut className="w-4 h-4 mr-2 text-red-600" /> Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
 
       {showProfile && (
         <Profile
           isOpen={showProfile}
-          onClose={() => setShowProfile(false)}
-          userName={userName}
-          userEmail={userEmail}
-          onUpdateName={(newName) => console.log("update name", newName)}
+          onClose={onCloseProfile}
         />
       )}
     </>
