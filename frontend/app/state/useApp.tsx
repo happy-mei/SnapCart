@@ -11,7 +11,13 @@ type AppContextType = {
 };
 
 const AppContext = createContext<AppContextType | null>(null);
-export const useApp = () => useContext(AppContext);
+export const useApp = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useApp must be used within an AppProvider");
+  }
+  return context;
+};
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [userName, setUserName] = useState("");

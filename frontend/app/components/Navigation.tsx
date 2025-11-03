@@ -15,7 +15,6 @@ import { Profile } from "./Profile";
 import { useState } from "react";
 
 interface NavigationProps {
-  userName: string;
 }
 
 const navItems = [
@@ -23,10 +22,11 @@ const navItems = [
   { label: "Upload", path: "upload", icon: Upload },
 ];
 
-export function Navigation({ userName }: NavigationProps) {
+export function Navigation({ }: NavigationProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname; // e.g. "/dashboard" or "/upload"
+  const { userName } = useApp();
   
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -104,7 +104,7 @@ const NavItem = ({
 };
 
 const UserMenuDropdownContent = () => {
-  const { userName, userEmail, onLogout } = useApp()!;
+  const { userName, userEmail, onLogout } = useApp();
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
 

@@ -16,7 +16,7 @@ export default function UploadPage() {
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
-  const { userName } = useApp()!;
+  const { userName } = useApp();
 
   const resetUpload = () => {
     setUploaded(false);
@@ -25,7 +25,7 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation userName={userName} />
+      <Navigation />
       <div className="min-h-screen bg-gray-50 pt-16 pb-20 md:pb-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
