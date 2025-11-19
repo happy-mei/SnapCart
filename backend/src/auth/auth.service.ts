@@ -1,13 +1,13 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { pool } from "../config/db";
+import { pool } from "../config/db.js";
 import {
   signAccessToken,
   signRefreshToken,
   saveRefreshToken,
   deleteRefreshTokenByHash,
-} from "./token";
+} from "./token.js";
 
 export class AuthService {
   static async register(email: string, password: string, name: string) {

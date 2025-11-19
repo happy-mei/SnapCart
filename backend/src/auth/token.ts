@@ -1,6 +1,6 @@
 import jwt, { type Secret } from "jsonwebtoken";
 import crypto from "crypto";
-import { pool } from "../config/db";
+import { pool } from "../config/db.js";
 
 export function signAccessToken(userId: number) {
   return jwt.sign({ id: userId }, process.env.JWT_ACCESS_SECRET as Secret, {
