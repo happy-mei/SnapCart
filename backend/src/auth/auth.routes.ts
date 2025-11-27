@@ -71,6 +71,17 @@ router.post("/refresh", async (req, res) => {
 //   res.json({ user });
 // });
 
+router.get("/me", async (req, res) => {
+  console.log("Me endpoint hit");
+  try {
+    const token = req.cookies.accessToken;
+    const user = await AuthService.me(token);
+    res.json({ user });
+  } catch {
+    res.status(401).json({ error: "Invalid token" });
+  }
+});
+
 router.post("/logout", async(req, res) => {
   const token = req.cookies.refreshToken;
   if (token) await AuthService.logout(token);

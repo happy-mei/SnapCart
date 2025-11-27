@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -19,13 +19,12 @@ export default function LoginPage({ }: LoginProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const apiUrl = import.meta.env.VITE_API_URL || "";
     try {
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
       const body: any = { email, password };
       if (!isLogin) body.name = name;
 
-      const res = await fetch(apiUrl + endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         credentials: "include", // Include cookies
         headers: { "Content-Type": "application/json" },
@@ -73,7 +72,7 @@ export default function LoginPage({ }: LoginProps) {
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Mei"
+                    placeholder="Your Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required={!isLogin}
@@ -98,7 +97,7 @@ export default function LoginPage({ }: LoginProps) {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder=""
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -111,7 +110,7 @@ export default function LoginPage({ }: LoginProps) {
                   <Input
                     id="confirm-password"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder=""
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required={!isLogin}
@@ -128,7 +127,7 @@ export default function LoginPage({ }: LoginProps) {
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline cursor-pointer"
               >
                 {isLogin
                   ? "Don't have an account? Sign up"
@@ -137,13 +136,6 @@ export default function LoginPage({ }: LoginProps) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Demo Login Info */}
-        <div className="mt-4 text-center">
-          <p className="text-gray-600">
-            Demo: Just click "{isLogin ? "Sign In" : "Create Account"}" to continue
-          </p>
-        </div>
       </div>
     </div>
   );
