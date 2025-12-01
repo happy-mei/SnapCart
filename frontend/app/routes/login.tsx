@@ -1,49 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { useNavigate } from "react-router";
+import { LoginForm } from "~/components/login/LoginForm";
+import { RegisterForm } from "~/components/login/RegisterForm";
 
-interface LoginProps {
-}
-
-export default function LoginPage({ }: LoginProps) {
+export default function LoginPage({}: {}) {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
-      const body: any = { email, password };
-      if (!isLogin) body.name = name;
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        credentials: "include", // Include cookies
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        // show error
-        alert(data.error || "Auth failed");
-        return;
-      }
-
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      alert("Network error");
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
@@ -65,63 +27,10 @@ export default function LoginPage({ }: LoginProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Your Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required={!isLogin}
-                  />
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder=""
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-
-              {!isLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    placeholder=""
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required={!isLogin}
-                  />
-                </div>
-              )}
-
-              <Button type="submit" className="w-full">
-                {isLogin ? "Sign In" : "Create Account"}
-              </Button>
-            </form>
+            { isLogin ?
+              <LoginForm /> :
+              <RegisterForm onSuccess={() => setIsLogin(true)} />
+            }
 
             <div className="mt-4 text-center">
               <button

@@ -29,10 +29,10 @@ export class AuthService {
       [email]
     );
     const user = userRes.rows[0];
-    if (!user) throw new Error("INVALID");
+    if (!user) throw new Error("Invalid credentials");
 
     const ok = await bcrypt.compare(password, user.password_hash);
-    if (!ok) throw new Error("INVALID");
+    if (!ok) throw new Error("Invalid credentials");
 
     const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
@@ -73,8 +73,8 @@ export class AuthService {
 
     return {
       user: userRes.rows[0],
-      access: newAccess,
-      refresh: newRefresh,
+      accessToken: newAccess,
+      refreshToken: newRefresh,
     };
   }
 

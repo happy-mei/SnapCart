@@ -1,14 +1,13 @@
+import "./config/env.js";
 import express, { type Express } from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
-import dotenv from "dotenv";
 import authRoutes from "./auth/auth.routes.js";
 
-dotenv.config();
-
 const app: Express = express();
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]'));
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -24,15 +23,12 @@ app.use(helmet({
 }));
 app.use(express.json());
 app.use(cookieParser());
-
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
   })
 );
-
-app.use(morgan(':method :url :status :response-time ms - :res[content-length]'));
 
 // routes
 app.use("/api/auth", authRoutes);

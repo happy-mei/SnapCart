@@ -4,7 +4,7 @@ type AppContextType = {
   userName: string;
   userEmail: string;
   userAvatar: string;
-  onLogin: (name: string, email: string, avatar: string) => void;
+  onLogin: (user: { name: string; email: string; avatar: string }) => void;
   onLogout: () => void;
   setUserName: (name: string) => void;
   setUserAvatar: (avatar: string) => void;
@@ -24,7 +24,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [userEmail, setUserEmail] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
 
-  const onLogin = (name: string, email: string, avatar: string) => {
+  const onLogin = (user: { name: string; email: string; avatar: string; }) => {
+    const { name, email, avatar } = user;
     setUserName(name);
     setUserEmail(email);
     setUserAvatar(avatar);
