@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { LoginForm } from "~/components/login/LoginForm";
-import { RegisterForm } from "~/components/login/RegisterForm";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { LoginForm } from "./LoginForm";
+import { RegisterForm } from "./RegisterForm";
 
 export default function LoginPage({}: {}) {
   const [isLogin, setIsLogin] = useState(true);

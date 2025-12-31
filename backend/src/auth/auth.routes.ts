@@ -48,6 +48,9 @@ router.post("/login", async(req, res) => {
 router.post("/refresh", async (req, res) => {
   try {
     const oldToken = req.cookies.refreshToken;
+    if (!oldToken) {
+      throw new Error("No token");
+    }
     const { user, accessToken, refreshToken } = await AuthService.refresh(oldToken);
 
     res.cookie("accessToken", accessToken, cookieBase);
@@ -71,7 +74,7 @@ router.get("/session", async (req, res) => {
   try {
     const user = await AuthService.checkSession(token);
     if (!user) {
-      throw new Error("User not found");
+      return res.status(401).json({ msg: "User not found"});
     }
     res.json({ user });
   } catch (err: any) {
@@ -80,7 +83,7 @@ router.get("/session", async (req, res) => {
       return res.status(401).json({ msg: "Expired token", expired: true });
     }
     if (err instanceof jwt.JsonWebTokenError) {
-      return res.status(401).json({ msg: "Invalid token", expired: true });
+      return res.status(401).json({ msg: "Invalid token" });
     }
     res.status(500).json({ msg: "Server error"});
   }

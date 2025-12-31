@@ -1,6 +1,6 @@
 import { Upload, Loader2 } from "lucide-react";
-import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
+import { Card, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 
 interface UploadCardProps {
   uploading: boolean;
@@ -13,30 +13,29 @@ export function UploadCard({ uploading, setUploading, setUploaded, setItems }: U
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      handleUpload();
+      handleUpload(e.target.files[0]);
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async (file: File) => {
     setUploading(true);
-    // Simulate upload and parsing
-    setTimeout(() => {
-      setUploading(false);
-      setUploaded(true);
-      const mockItems = [
-        { id: "1", name: "Organic Bananas", price: 4.99, quantity: 1, category: "Fresh Produce" },
-        { id: "2", name: "Milk 2L", price: 3.49, quantity: 2, category: "Dairy" },
-        { id: "3", name: "Chicken Breast 500g", price: 12.99, quantity: 1, category: "Meat & Seafood" },
-        { id: "4", name: "Bread Wholemeal", price: 3.20, quantity: 1, category: "Pantry" },
-        { id: "5", name: "Tomatoes", price: 5.80, quantity: 1, category: "Fresh Produce" },
-      ];
-      setItems(mockItems);
-    }, 2000);
+    const res = await fetch("/receipt/upload", {
+      method: "POST",
+      credentials: "include",
+      body: (() => {
+        const formData = new FormData();
+        formData.append("receipt", file);
+        return formData;
+      })(),
+    })
+    const data = await res.json();
+    setItems(data.receipt.items);
+    setUploading(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    handleUpload();
+    handleUpload(e.dataTransfer.files[0]);
   };
 
   const handleDragOver = (e: React.DragEvent) => {

@@ -4,27 +4,23 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useApp } from "~/state/useApp";
 
-async function fetchWithAuth(url: string, options?: RequestInit) {
-  const res = await fetch(url, { credentials: "include", ...options });
+async function checkSession(options?: RequestInit) {
+  const res = await fetch("/api/auth/session", { credentials: "include", ...options });
   const data = await res.json();
   if (res.ok) return data;
-
   // If token expired, try refresh
-  if (res.status === 401) {
-    if (data.expired) {
-      const refreshed = await fetch("/api/auth/refresh", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (refreshed.ok) {
-        // refresh successful, retry original request
-        return fetchWithAuth(url, options);
-      }
+  if (res.status === 401 && data.expired) {
+    const refreshed = await fetch("/api/auth/refresh", {
+      method: "POST",
+      credentials: "include",
+    });
+    const refreshData = await refreshed.json();
+    if (refreshed.ok) {
+      return refreshData;
     }
+    toast.error("Session expired, please log in again");
+    throw new Error(refreshData.msg || "Request failed");
   }
-
-  // failed for real
   throw new Error(data.msg || "Request failed");
 }
 
@@ -35,7 +31,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const { onLogin } = useApp();
 
   useEffect(() => {
-    fetchWithAuth("/api/auth/session")
+    checkSession()
       .then((data) => {
         onLogin(data.user);
         navigate("/dashboard", { replace: true });

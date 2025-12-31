@@ -1,9 +1,9 @@
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Field, FieldError, FieldLabel } from "../ui/field";
+import { Field, FieldError, FieldLabel } from "~/components/ui/field";
 import { registerSchema } from "./schema";
 import { toast } from "sonner";
 

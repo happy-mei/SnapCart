@@ -4,16 +4,16 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle 
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Separator } from "../ui/separator";
+} from "~/components/ui/dialog";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { Separator } from "~/components/ui/separator";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { Spinner } from "../ui/spinner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "~/components/ui/alert-dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import { Spinner } from "~/components/ui/spinner";
 
 interface ReceiptDetailDialogProps {
   isOpen: boolean;

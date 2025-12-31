@@ -1,9 +1,9 @@
-import { Navigation } from "../components/nav/Navigation";
+import { Navigation } from "../../components/nav/Navigation";
 import { useEffect, useState } from "react";
-import { ChartsSection } from "~/components/dashboard/ChartsSection";
-import { GreetingHeader } from "~/components/dashboard/GreetingHeader";
-import { RecentReceipts } from "~/components/dashboard/RecentReceipts";
-import { SummaryCards } from "~/components/dashboard/SummaryCards";
+import { ChartsSection } from "./ChartsSection";
+import { GreetingHeader } from "./GreetingHeader";
+import { RecentReceipts } from "./RecentReceipts";
+import { SummaryCards } from "./SummaryCards";
 
 export default function DashboardPage() {
   const [lifestyleTags, setLifestyleTags] = useState<Array<{ icon: string; label: string; description: string }>>([]);

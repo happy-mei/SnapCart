@@ -1,8 +1,8 @@
-import { Navigation } from "../components/nav/Navigation";
+import { Navigation } from "../../components/nav/Navigation";
 import { useApp } from "~/state/useApp";
 import { useState } from "react";
-import { UploadCard } from "~/components/upload/UploadCard";
-import { ReceiptReview } from "~/components/upload/ReceiptReview";
+import { UploadCard } from "./UploadCard";
+import { ReceiptReview } from "./ReceiptReview";
 
 export default function UploadPage() {
   const [uploading, setUploading] = useState(false);

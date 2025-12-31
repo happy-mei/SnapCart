@@ -5,7 +5,6 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function parseReceipt(filePath: string) {
   try {
-    const imageFile = fs.createReadStream(filePath);
 
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",

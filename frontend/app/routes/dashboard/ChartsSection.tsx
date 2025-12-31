@@ -1,5 +1,5 @@
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 
 export const ChartsSection = ({spendingOverTime, categoryBreakdown}: {
   spendingOverTime: Array<{ date: string; amount: number }>;

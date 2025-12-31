@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,17 +9,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "~/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "~/components/ui/select";
 import { toast } from "sonner"
 import { useNavigate } from "react-router";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "~/components/ui/spinner";
 
 export const ReceiptReview = ({ items, onSave, onCancel }: {
   items: ReceiptItem[];

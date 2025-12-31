@@ -1,11 +1,11 @@
 import { Eye, Loader2 } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { useEffect, useState } from "react";
 import { ReceiptDetailDialog } from "./ReceiptDetailDialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "../ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "~/components/ui/pagination";
 import { ALL_MONTHS, ALL_YEARS, RecentReceiptFilters } from "./RecentReceiptFilters";
 
 export const RecentReceipts = () => {

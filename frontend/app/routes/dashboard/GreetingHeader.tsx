@@ -1,6 +1,6 @@
 import { useApp } from "~/state/useApp";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { Badge } from "../ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
+import { Badge } from "~/components/ui/badge";
 
 export const GreetingHeader = ({lifestyleTags}: {
   lifestyleTags: Array<{ icon: string; label: string; description: string }>;

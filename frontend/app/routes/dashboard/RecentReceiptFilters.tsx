@@ -1,4 +1,4 @@
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../ui/select";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "~/components/ui/select";
 
 export const ALL_YEARS = "All Years";
 export const ALL_MONTHS = "All Months";

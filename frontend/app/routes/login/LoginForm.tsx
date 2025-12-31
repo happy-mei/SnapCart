@@ -1,10 +1,10 @@
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
-import { Field, FieldError, FieldLabel } from "../ui/field";
+import { Field, FieldError, FieldLabel } from "~/components/ui/field";
 import { loginSchema } from "./schema";
 import { toast } from "sonner";
 import { useApp } from "~/state/useApp";

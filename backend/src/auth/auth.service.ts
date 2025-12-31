@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   static async refresh(oldToken: string) {
-    const payload = jwt.verify(oldToken, process.env.JWT_REFRESH_SECRET!) as any;
+    const payload = jwt.verify(oldToken, process.env.JWT_REFRESH_SECRET as Secret);
     const hash = crypto.createHash("sha256").update(oldToken).digest("hex");
     const lookup = await pool.query(
       `SELECT user_id FROM refresh_tokens WHERE token_hash=$1`,
@@ -56,17 +56,23 @@ export class AuthService {
     if (lookup.rowCount === 0) {
       throw new Error("Not found");
     }
-
-    const userId = payload.id;
+    // Validate that DB says this token belongs to this user
+    const dbUserId = lookup.rows[0].user_id;
+    const tokenUserId = typeof payload == "object" ? payload.id : null;
+    if (dbUserId !== tokenUserId) {
+      // security incident, do not reissue
+      await deleteRefreshTokenByHash(hash);
+      throw new Error("Token does not match user");
+    }
+    // delete the old refresh token row
     await deleteRefreshTokenByHash(hash);
-
-    const newRefresh = signRefreshToken(userId);
-    const newAccess = signAccessToken(userId);
-    await saveRefreshToken(userId, newRefresh);
-
+    // generate new tokens
+    const newRefresh = signRefreshToken(dbUserId);
+    const newAccess  = signAccessToken(dbUserId);
+    await saveRefreshToken(dbUserId, newRefresh);
     const userRes = await pool.query(
       `SELECT id, email, name FROM users WHERE id=$1`,
-      [userId]
+      [dbUserId]
     );
     return {
       user: userRes.rows[0],
