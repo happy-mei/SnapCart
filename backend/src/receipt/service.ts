@@ -1,5 +1,6 @@
 import fs from "fs";
 import OpenAI from "openai";
+import { pool } from "../config/db.js";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -17,44 +18,44 @@ export async function parseReceipt(filePath: string) {
             {
               type: "input_text",
               text: `
-            You are an OCR system.
+You are an OCR system.
 
-            Extract the receipt into the following JSON format ONLY.
-            Return valid JSON. Do not include explanations, comments, or markdown.
+Extract the receipt into the following JSON format ONLY.
+Return valid JSON. Do not include explanations, comments, or markdown.
 
-            Rules:
-            - category MUST be one of the allowed values below
-            - If an item does not clearly match, use "Other"
-            - If a field is missing, use null
+Rules:
+- category MUST be one of the allowed values below
+- If an item does not clearly match, use "Other"
+- If a field is missing, use null
 
-            Allowed categories:
-            - Fresh Produce
-            - Dairy
-            - Meat
-            - Seafood
-            - Pantry
-            - Beverages
-            - Snacks
-            - Household Items
-            - Personal Care
-            - Other
+Allowed categories:
+- Fresh Produce
+- Dairy
+- Meat
+- Seafood
+- Pantry
+- Beverages
+- Snacks
+- Household Items
+- Personal Care
+- Other
 
-            Schema:
-            {
-              "vendor": string,
-              "date": string | null,
-              "items": [
-                {
-                  "name": string,
-                  "quantity": number | null,
-                  "unit_price": number | null,
-                  "total_price": number,
-                  "category": "Fresh Produce" | "Dairy" | "Meat" | "Seafood" | "Pantry" | "Beverages" | "Snacks" | "Household Items" | "Personal Care" | "Other"
-                }
-              ],
-              "total": number
-            }
-            `
+Schema:
+{
+  "vendor": string,
+  "date": string | null,
+  "items": [
+    {
+      "name": string,
+      "quantity": number | null,
+      "unit_price": number | null,
+      "total_price": number,
+      "category": "Fresh Produce" | "Dairy" | "Meat" | "Seafood" | "Pantry" | "Beverages" | "Snacks" | "Household Items" | "Personal Care" | "Other"
+    }
+  ],
+  "total": number
+}
+`
             },
             {
               type: "input_image",
@@ -85,5 +86,55 @@ export async function parseReceipt(filePath: string) {
   } catch (err) {
     console.error("OCR error:", err);
     throw err;
+  }
+}
+
+export async function saveReceipt(
+  userId: number,
+  vendor: string,
+  total: number,
+  date: string | null,
+  items: ReceiptItemInput[]
+) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const receiptRes = await client.query(
+      `
+      INSERT INTO receipts (user_id, vendor, total, receipt_date)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id
+      `,
+      [userId, vendor, total, date]
+    );
+
+    const receiptId = receiptRes.rows[0].id;
+
+    const itemQuery = `
+      INSERT INTO receipt_items
+      (receipt_id, name, quantity, price, category)
+      VALUES ($1, $2, $3, $4, $5)
+    `;
+
+    for (const item of items) {
+      await client.query(itemQuery, [
+        receiptId,
+        item.name,
+        item.quantity ?? null,
+        item.price ?? null,
+        item.category ?? "Other",
+      ]);
+    }
+
+    await client.query("COMMIT");
+
+    return { receiptId };
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
   }
 }

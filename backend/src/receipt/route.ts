@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import fs from "fs";
-import { parseReceipt } from "./service.js";
+import { parseReceipt, saveReceipt } from "./service.js";
 import { pool } from "../config/db.js";
 import { requireAuth, type AuthRequest } from "../auth/middleware.js";
 
@@ -31,23 +31,31 @@ router.post(
   requireAuth,
   async (req: AuthRequest, res: Response) => {
     const { vendor, total, date, items } = req.body;
-    const { userId } = req.user || {};
-    try {
-      const result = await pool.query(
-        `INSERT INTO receipts (user_id, vendor, total, date, items)
-        VALUES ($1,$2,$3,$4,$5)
-        RETURNING *`,
-        [userId, vendor, total, date, JSON.stringify(items)]
-      );
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthenticated" });
+    }
 
-      res.json({ receipt: result.rows[0] });
+    try {
+      const result = await saveReceipt(
+        userId,
+        vendor,
+        total,
+        date,
+        items
+      );
+      res.json({
+        message: "Receipt saved successfully",
+        receiptId: result.receiptId,
+      });
     } catch (err) {
-      console.error("Error saving receipt:", err);
+      console.error("Save receipt error:", err);
       res.status(500).json({ error: "Failed to save receipt" });
     }
-  });
+  }
+);
 
-router.get("/categories", async (req: Request, res: Response) => {
+router.get("/categories", async (_, res: Response) => {
   try {
     const categories = [
       "Fresh Produce",
